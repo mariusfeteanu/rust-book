@@ -18,22 +18,19 @@ pub struct Config {
 
 impl Config {
     pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
-        let query = args.next().expect("please specify a query");
-        let file_path = args.next().expect("please specify a file path");
+        args.next();
+        let query = args.next().ok_or("please specify a query")?;
+        let file_path = args.next().ok_or("please specify a file path")?;
 
         return Ok(Config { query, file_path });
     }
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    return results;
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 #[cfg(test)]
