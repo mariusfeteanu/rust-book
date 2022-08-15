@@ -2,7 +2,11 @@ use std::error::Error;
 use std::fs;
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    let file_contents = fs::read_to_string(config.file_path)?;
+    let contents = fs::read_to_string(config.file_path)?;
+
+    for result in search(&config.query, &contents) {
+        println!("{result}");
+    }
 
     Ok(())
 }
